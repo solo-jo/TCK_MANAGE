@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>TCK_MANAGER - Login</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
+  
+  <!-- 레이어 팝업 CSS -->
+  <link href="/css/layer_pop.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="adminloginb">
+	<div class="login_wrap">
+		<h1 class="login_logo"><img src="/image/tck_logo.png" alt="TCK" /></h1>
+		<form name="frm" id="frm" method="post">
+			<div class="login_form">
+				<ul>
+					<li><input type="text" id="id" name="id" placeholder="아이디" class="login_ip"  data-required="아이디" /></li>
+					<li><input type="password" id="password" name="password" placeholder="비밀번호" data-required="비밀번호" class="login_ip" /></li>
+				</ul>
+				<a href="#" id="loginBtn" class="btn_login">로그인</a>
+			</div>
+		</form>
+	</div>
+	<!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/vendor/jquery-validate/jquery.validate.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/js/tck/tck.js"></script>
+  
+  <script type="text/javascript">
+		function login(){
+	        var ValidateEl = $("#frm [data-required]");
+			TckJS.ValidateUtil.ValidateCheck(ValidateEl, function() {
+				var requestData = {}
+				var menu_codes = [];
+				var frm_data = $("#frm").serializeArray();
+				for (var index in frm_data) {
+					requestData[frm_data[index].name] = frm_data[index].value;
+	            }
+				TckJS.Ajax.postAjaxLoding("/doLogin", requestData, function (res) {
+		            location.href = res.url;
+		        })
+			});
+		}
+		
+		$(document).ready( function() {
+			TckJS.Util.AlertMode = "layer";
+			$("#id").focus();
+			
+			$("#loginBtn").click(function(){
+				login();
+				return false;
+			});
+			
+			$("#password").keyup(function(e){
+				if(e.keyCode == 13) login();
+			});
+		});
+	
+	</script>
+</body>
+  
+</html>

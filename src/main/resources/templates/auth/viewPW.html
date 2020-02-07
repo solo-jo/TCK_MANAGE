@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>KISO Admin -초기 비밀번호 설정</title>
+  
+  <!-- Custom fonts for this template-->
+  <link href="/css/auth.css" rel="stylesheet" type="text/css">
+  
+  <!-- 레이어 팝업 CSS -->
+  <link href="/css/layer_pop.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="adminloginb">
+	<div class="auth_wrap">
+		
+		<div class="auth_title" style="margin-top: -65px;">
+			<h1 style="font-size:30px;margin-bottom:15px;">비밀번호 변경</h1>
+			<h2>계정 정보보호를 위해 주기적(90일)으로 비밀번호 변경을 시행하고 있습니다.</h2>
+			<h2>이 페이지는 비밀번호 만료 5일전 부터 보여지며,</h2>
+			<h2>비밀 번호 변경 시점 만료 후 계정이 잠겨 사용 할 수 없으니 유의해 주세요.</h2>
+		</div>
+		
+		<form name="frm" id="frm" method="post">
+			<input type="hidden" id="id" name="id" th:value="${session.auth.id}"/>
+			<div class="auth_form">
+				<ul>
+					<li><input type="password" id="prePassword" name="prePassword" placeholder="현재 비밀번호" class="auth_ip" data-required="현재 비밀번호"/></li>
+					<li><input type="password" id="password" name="password" placeholder="새로운 비밀번호" class="auth_ip" data-required="새로운 비밀번호"/></li>
+					<li><input type="password" id="c_password" name="c_password" placeholder="비밀번호 확인" class="auth_ip" data-required="비밀번호 확인" /></li>
+				</ul>
+				<a href="#" id="updateBtn" class="btn_auth" onclick="frmSubmit();">비밀번호 변경</a>
+				<a href="#" th:if="${rday > 0 }" style="height: 36px;font-size: 14px;" id="updateBtn" class="default_btn" onclick="Close();">닫 기</a>
+			</div>
+		</form>
+		<!-- 
+		<p class="login_copy">Copyright ⓒ 2016 FUJIFILM ELECTRONIC IMAGING KOREA CO.LTD.</p>
+		 -->
+	</div>
+	<!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/vendor/jquery-validate/jquery.validate.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/js/tck/tck.js"></script>
+  
+  <script type="text/javascript">
+		$(document).ready( function() {
+			TckJS.Util.AlertMode = "layer";
+			$("#password").focus();
+			
+			$("#updateBtn").click(function(){
+				frmSubmit();
+				return false;
+			});
+			
+			$("#password").keyup(function(e){
+				if(e.keyCode == 13) frmSubmit();
+			});
+		});
+		
+		function frmSubmit(){
+			var ValidateEl = $("#frm [data-required]");
+			TckJS.ValidateUtil.ValidateCheck(ValidateEl, function() {
+				var frm = $("#frm");
+				 
+				if(frm.find("#password").val().trim() == frm.find("#prePassword").val().trim()){
+					TckJS.Util.Alert("현재 비밀번호는 사용이 불가능합니다.");
+					return false;
+				}
+				
+				
+				if(frm.find("#password").val().trim() != frm.find("#c_password").val().trim()){
+					TckJS.Util.Alert("비밀번호가 일치하지 않습니다.");
+					return false;
+				}
+					
+				 var frm_data = $("#frm").serializeArray();
+			        var requestData = {};
+
+			        for (var index in frm_data) {
+			        	requestData[frm_data[index].name] = frm_data[index].value;
+			        }
+
+			        TckJS.Ajax.postAjaxLoding("/updatePW", requestData, function (res) {
+			            location.href = res.url;
+			        })
+			});
+		}
+		function Close(){
+			var viewUrl = "[[ ${viewUrl} ]]";
+			location.href = viewUrl;
+		}
+		
+	</script>
+</body>
+  
+</html>

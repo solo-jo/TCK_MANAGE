@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="@{/vendor/datatables/dataTables.bootstrap4.css}" rel="stylesheet">
+		<link th:href="${#tck.getVersion('/css/detail.css')}" rel='stylesheet' type='text/css' />
+		<link th:href="${#tck.getVersion('/css/list.css')}" rel='stylesheet' type='text/css' />
+		<link th:href="${#tck.getVersion('/css/view/penalty_detail.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+			
+				<!-- 검색 조건 -->
+				<div class="card-header">
+					<form name="Searchfrm" id="Searchfrm" method="GET">
+						<div class="con_search_form">
+							<table summary="매물신고 검색" class="con_search_table tbl_search">
+								<colgroup>
+									<col class="tbl-col-01" />
+									<col class="tbl-col-01" />
+									<col class="tbl-col-01" />
+									<col class="tbl-col-02" />
+									<col class="tbl-col-03" />
+								</colgroup>
+								<tr>
+									<th>사번</th>
+									<td>
+										<input type="text" class="form-control w-100" id="id" name="id"  th:value="${param.id}" />
+									</td>
+									<th>검색기간</th>
+									<td>
+										<input type="text" id="searchDateFrom" name="searchDateFrom" class="form-control datepicker" readonly th:value="${param.searchDateFrom}"/> -
+										<input type="text" id="searchDateTo" name="searchDateTo" class="form-control datepicker" readonly th:value="${param.searchDateTo}"/>							
+									</td>
+									<td>
+										<button type="button" class="btn btn-primary ml-2" onclick="TckJS.PageUtil.goSearch();"><i class="fas fa-search"></i>&nbsp;조회</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</form>
+				</div>
+				
+				<!-- 검색 결과 -->
+				<div class="card-body">
+					<table class="table table-striped dataTable" id="dataTable" width="100%" cellspacing="0">
+					    <colgroup>
+					    	<col style="width:15%">
+					    	<col style="width:10%">
+					    	<col style="width:10%">
+					    	<col style="width:15%">
+					    	<col style="width:10%">
+					    	<col style="width:15%">
+					    	<col style="width:25%">
+					    </colgroup>
+						<thead>
+							<tr>
+								<th>업무날짜</th>
+								<th>근무개시시간</th>
+								<th>근무종료시간</th>
+								<th>프로젝트</th>
+								<th>작업분류</th>
+								<th>작업명</th>
+								<th>상세내용</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				
+			</div>
+		</div>
+	</th:block>
+
+	<th:block layout:fragment="script">
+		<!-- Page level plugin JavaScript-->
+		<script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+		<script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+		<script th:src="@{/js/tck/data_table_util.js}"></script>
+		<script th:src="@{/js/tck/addr_code.js}"></script>
+		<script th:src="@{/js/tck/company_code.js}"></script>
+		<script th:src="@{/js/tck/excel_util.js}"></script>
+		<script>
+		/*<![CDATA[*/
+		
+		var setData = []
+		setData.push({ formID : "Searchfrm" ,targatID : "id", val : "[[ ${param.id} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchDateFrom", val : "[[ ${param.searchDateFrom} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchDateTo", val : "[[ ${param.searchDateTo} ]]" });
+		
+		$(document).ready(function() {
+			TckJS.Util.AlertMode = "layer";
+			TckJS.PageUtil.init(setData, null);
+			
+			 var dataTable_serach = function ( d ) {
+			      return $.extend( {}, d,  {
+						 "id": $('#id').val(),
+						 "searchDateFrom": $('#searchDateFrom').val(),
+						 "searchDateTo": $('#searchDateTo').val()
+					 });
+			    };
+			     
+			 var dataTable_columns = [
+				 	{ data: "work_dt", "render": function ( data, type, row, meta ) {
+	                    return toDateFormat(data);
+            		} },
+				 	{ data: "start_time", "render": function ( data, type, row, meta ) {
+	                    return toTimeFormat(data);
+                		} 
+				 	},
+				 	{ data: "end_time",  "render": function ( data, type, row, meta ) {
+	                    return toTimeFormat(data);
+            			}  
+				 	},
+	                { data: "proj_name"},
+	                { data: "work_category" },
+	                { data: "work_detail" },
+	                { data: "work_desc" }
+	         ];
+			 
+			var dataTable_order = [0, 'desc']; 
+			
+			DataTableUtil.init($('#dataTable'), "/work/ajax/get", dataTable_serach, dataTable_columns, dataTable_order);
+			DataTableUtil.EnterSubmit($("#Searchfrm #searchKeyword"));
+			
+			function toDateFormat(date) {
+				return date.substring(0,4) + '-' + date.substring(4,6) + '-' + date.substring(6,8);
+			};
+			
+			function toTimeFormat(date) {
+				return date.substring(11, 16);
+			};
+				
+		});
+		/*]]>*/
+	</script>
+	</th:block>
+	
+	
+	
+</body>
+</html>
+
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="divWarningCncl" class="modal pltModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true" th:fragment="pltWarningCncl">
+	<div class="modal-header">
+		<h3>
+			 경고 취소
+		</h3>
+		<a class="close" data-dismiss="modal" aria-hidden="true">×</a>
+	</div>
+	<div class="modal-body">
+		<form id="frm_warn_cncl" name="frm_warn_cncl" method="post">
+			<input type="hidden" id="dcl_seq" name="dcl_seq" />
+			<table class="table table-detail" style="margin-bottom: 0px;">
+				<colgroup>
+					<col width="140" />
+					<col />
+				</colgroup>
+				<tbody>
+					<tr style="vertical-align: inherit;">				
+	                    <th>신고번호</th>
+	                    <td id="dcl_seq_text"></td>  
+                	</tr>
+                	<tr>
+	                    <th>신고사유</th>
+	                    <td id="lst_trt_rslt_cd_text"></td>
+                	</tr>
+                	<tr>
+	                    <th>
+	                    	경고취소<br/>
+	                    	관리자메모
+	                    </th>
+	                    <td>
+	                         <textarea class="form-control" id="cncl_rsn" name="cncl_rsn"></textarea>
+	                    </td>
+                	</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-success" onclick="PenaltyDetail.WarnModeilSumit()">확인</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">닫기</button>
+	</div>
+</div>
+</html>
+
+

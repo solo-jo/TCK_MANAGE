@@ -1,0 +1,58 @@
+<!-- Sidebar -->
+<th:block th:fragment="sidebar">
+	<ul class="sidebar navbar-nav bg-gradient-dark-01">
+		<th:block th:if="${session.menu != null}">
+			<th:block th:each="item : ${session.menu}">
+				<th:block th:switch="${item.menu_code}">
+					<li th:case="060000" id="menu_statistic" class="nav-item">
+						<a class="nav-link" th:href="${item.url}">
+							<i class="fas fa-fw fa-chart-bar"></i> <span th:text="${item.menu_title}"></span>
+						</a>
+					</li>
+					<li th:case="010000" id="menu_atcl_rltr" class="nav-item" >
+						<a class="nav-link" th:href="${item.url}">
+							<i class="fas fa-fw fa-clipboard-check"></i> <span>신고매물처리현황</span>
+						</a>
+					</li>
+					<li th:case="020000" id="menu_atcl_call" class="nav-item">
+						<a class="nav-link" th:href="${item.url}">
+							<i class="fas fa-fw fa-phone-alt"></i> <span th:text="${item.menu_title}"></span>
+						</a>
+					</li>
+					<li th:case="030000" id="menu_atcl_fild" class="nav-item">
+						<a class="nav-link" th:href="${item.url}">
+							<i class="fas fa-fw fa-search-location"></i> <span th:text="${item.menu_title}"></span>
+						</a>
+					</li>
+					<li th:case="040000" id="menu_plt" class="nav-item">
+						<a class="nav-link" th:href="${item.url}">
+							<i class="fas fa-fw fa-exclamation-triangle"></i> <span th:text="${item.menu_title}"></span>
+						</a>
+					</li>
+					<li th:case="050000" id="menu_rltr_plt" class="nav-item">
+						<a class="nav-link" th:href="${item.url}">
+							<i class="fas fa-fw fa-clipboard-list"></i> <span th:text="${item.menu_title}"></span>
+						</a>
+					</li>
+					
+				</th:block>	
+			</th:block>
+		</th:block>
+		
+		<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown"	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+				<i class="fas fa-fw fa-folder"></i> <span>업무관리</span>
+			</a>
+			<div class="dropdown-menu" aria-labelledby="pagesDropdown">
+				<h6 class="dropdown-header">개인업무관리:</h6>
+				<a class="dropdown-item" href="/work/get">업무조회</a> 
+				<a class="dropdown-item" href="/work/addView">업무등록</a> 
+				<div class="dropdown-divider"></div>
+				<h6 class="dropdown-header">업무통계:</h6>
+				<a class="dropdown-item" href="/statistics/404.html">프로젝트별 투입시간</a> 
+				<a class="dropdown-item" href="/statistics/404.html">개인별 투입시간</a>
+			</div>
+		</li>
+		
+	</ul>
+</th:block>

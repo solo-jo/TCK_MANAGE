@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="${#tck.getVersion('/css/detail.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+				<div class="card-header">참여사생성</div>
+				<div class="card-body">
+					<form id="frm" name="frm">
+						<input type="hidden" id="overlap" name="overlap" value="0"/>
+						<table class="table table-bordered table-user">
+							<colgroup>
+								<col style="width:150px;"/>
+								<col style="width:*;"/>
+							</colgroup>
+							<tr>
+								<th>참여사 ID</th>
+								<td>
+									<input type="text" class="form-control" id="id" name="id" data-required="참여사 ID"  maxlength="20"/>
+								</td>
+							</tr>
+							<tr>
+								<th>참여사 명</th>
+								<td>
+									<input type="text" class="form-control" id="name" name="name" data-required="참여사 명" maxlength="50"/>
+								</td>
+							</tr>
+							<tr>
+								<th>참여사 URL</th>
+								<td>
+									<input type="text" class="form-control" id="url" name=url data-required="참여사 URL" maxlength="200"/>
+								</td>
+							</tr>
+							<!--  
+							<tr>
+								<td colspan="2">
+									<button type="button" class="btn btn-info btn-sm" onclick="CompanyDetail.insertSumit();">저장</button>
+									<button type="button" class="btn btn-default btn-sm" onclick="history.back();">취소</button>
+								</td>
+							</tr>
+							-->
+						</table>
+						<div class="text-center mt-3">
+							<button type="button" class="btn btn-primary mr-1" onclick="CompanyDetail.insertSumit();">저장</button>
+							<button type="button" class="btn btn-default" onclick="history.back();">취소</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	
+	<th:block layout:fragment="script">
+		<script th:src="${#tck.getVersion('/js/view/company_detail.js')}"></script>
+		<script>
+		/*<![CDATA[*/
+			$(document).ready(function() {
+				TckJS.Util.AlertMode = "layer";
+				$("#frm").find("#id").blur(function(){ CompanyDetail.overlap(); })
+				$("#frm").find("#id").change(function(){ $("#frm").find("#overlap").val("0"); })
+			});			
+		/*]]>*/
+	</script>
+	</th:block>
+</body>
+</html>
+
+

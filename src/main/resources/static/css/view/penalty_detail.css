@@ -1,0 +1,37 @@
+.pltModel {
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	z-index: 1050;
+	width: 750px;
+	height:310px;
+	margin-left: -320px;
+	background-color: #ffffff;
+}
+
+.pltModel>.modal-body {
+	position: relative;
+	overflow-y: auto;
+	max-height: 500px;
+	padding: 15px;
+}
+
+.pltModel .form-control  {
+	width:100%;
+}
+
+.pltModel .btn-default{
+	background-color:#fff;
+	border : 1px solid #ced4da;
+}
+
+
+.pltModel .btn-default:hover{
+	background-color:#dddddd;
+	border : 1px solid #fff;
+}
+
+
+.table-left td{
+	text-align:left !important;
+}

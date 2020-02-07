@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="${#tck.getVersion('/css/auth.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<div class="auth_title" style="margin: auto 0;">
+				<h1>비밀번호 변경</h1>
+			</div>
+
+			<form name="frm" id="frm" method="post">
+				<input type="hidden" id="id" name="id" th:value="${session.auth.id}"/>
+				<div class="auth_form">
+					<ul>
+						<li><input type="password" id="prePassword" name="prePassword" placeholder="현재 비밀번호" class="auth_ip" data-required="현재 비밀번호" /></li>
+						<li><input type="password" id="password" name="password" placeholder="새로운 비밀번호" class="auth_ip" data-required="새로운 비밀번호" /></li>
+						<li><input type="password" id="c_password" name="c_password" placeholder="비밀번호 확인" class="auth_ip" data-required="비밀번호 확인" /></li>
+					</ul>
+					<a href="#" id="updateBtn" class="btn_auth" onclick="frmSubmit();">비밀번호 변경</a>
+				</div>
+			</form>
+		</div>
+	</th:block>
+	<th:block layout:fragment="script">
+		<!-- Bootstrap core JavaScript-->
+		<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+		<script>
+			/*<![CDATA[*/
+			$(document).ready(function() {
+				TckJS.Util.AlertMode = "layer";
+				$("#password").focus();
+
+				$("#updateBtn").click(function() {
+					frmSubmit();
+					return false;
+				});
+
+				$("#password").keyup(function(e) {
+					if (e.keyCode == 13)
+						frmSubmit();
+				});
+			});
+
+			function frmSubmit() {
+				var ValidateEl = $("#frm [data-required]");
+				TckJS.ValidateUtil
+						.ValidateCheck(
+								ValidateEl,
+								function() {
+									var frm = $("#frm");
+									if (frm.find("#password").val().trim() != frm
+											.find("#c_password").val().trim()) {
+										TckJS.Util.Alert("비밀번호가 일치하지 않습니다.");
+										return false;
+									}
+
+									var frm_data = $("#frm").serializeArray();
+									var requestData = {};
+
+									for ( var index in frm_data) {
+										requestData[frm_data[index].name] = frm_data[index].value;
+									}
+
+									TckJS.Ajax.postAjaxLoding("/updatePW",
+											requestData, function(res) {
+												location.href = res.url;
+											})
+								});
+			}
+			/*]]>*/
+		</script>
+	</th:block>
+</body>
+</html>

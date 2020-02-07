@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="@{/vendor/datatables/dataTables.bootstrap4.css}" rel="stylesheet">
+		<link th:href="${#tck.getVersion('/css/list.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+	
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+				<!-- 검색 조건 -->
+				<div class="card-header">
+				<form name="Searchfrm" id="Searchfrm" method="GET">
+					<div class="con_search_form">
+						<table summary="유저관리 검색" class="con_search_table tbl_search">
+							<colgroup>
+								<col class="tbl-col-01" />
+								<col class="tbl-col-02" />
+								<col class="tbl-col-01" />
+								<col class="tbl-col-02" />
+								<col class="tbl-col-06" />
+							</colgroup>
+							<tr>
+								<th>이름</th>
+								<td>
+									<input type="text" class="form-control w-100" id="searchName" name="searchName" />
+								</td>
+								<th>아이디</th>
+								<td>
+									<input type="text" class="form-control w-100" id="searchId" name="searchId" />
+								</td>
+								<td>
+									<button class="btn btn-primary ml-2" type="submit"><i class="fas fa-search"></i>&nbsp;조회</button>
+									<button class="btn btn-info ml-1" type="button" onclick="location.href='/config/user/addView';"><i class="fas fa-user-plus"></i>&nbsp;회원추가</button>
+								</td>
+							</tr>
+							<!--  
+							<tr>
+								<th>아이디</th>
+								<td>
+									<input type="text" class="form-control" id="searchId" name="searchId" style="width: 205px;"  />
+								</td>
+								<td>
+									<button type="button" onclick="location.href='/config/user/addView';">회원추가</button>
+								</td>
+							</tr>
+							-->
+						</table>
+					</div>
+				</form>
+				</div>
+				
+				<!-- 검색 결과 -->
+				<div class="card-body">
+					<table class="table table-striped dataTable dataUser" id="dataTable" width="100%"	cellspacing="0">
+						<thead>
+							<tr>
+								<th>아이디</th>
+								<th>이름</th>
+								<th>상태</th>
+								<th>생성일</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block layout:fragment="script">
+		<!-- Page level plugin JavaScript-->
+		<script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+		<script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+		<script th:src="@{/js/tck/data_table_util.js}"></script>
+		<script>
+		/*<![CDATA[*/
+			
+		var setData = [];
+		setData.push({ formID : "Searchfrm" ,targatID : "searchId", val : "[[ ${param.searchId} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchName", val : "[[ ${param.searchName} ]]" });
+			
+		$(document).ready(function() {
+			TckJS.Util.AlertMode = "layer";
+			TckJS.PageUtil.init(setData,null);
+			
+			 var dataTable_serach = function ( d ) {
+			      return $.extend( {}, d,  {
+						 "searchId": $('#searchId').val(),
+						 "searchName": $('#searchName').val()
+					 });
+			    };
+			    
+		 	var dataTable_columns = [
+		               { data: "id" , "render": function ( data, type, row, meta ) {
+		            	   return '<a href="/config/user/view?acctNo='+row.acct_no+'">'+data+'</a>';
+		               	  }
+		               },
+		               { data: "name" },
+		               { data: "state", "render": function ( data, type, row, meta ) {
+		                	if(data == "1") return "해제";
+		                	else if(data == "0") return "잠금";
+		                	else return "";
+	               		} 
+		               },
+		               { data: "reg_dt" }
+		     ];
+				 
+			 var dataTable_order = [3, 'desc']; 
+				 
+			DataTableUtil.init($('#dataTable'),"/config/user/list" ,dataTable_serach ,  dataTable_columns,dataTable_order);
+			DataTableUtil.EnterSubmit($("#Searchfrm #searchName"));
+			DataTableUtil.EnterSubmit($("#Searchfrm #searchId"));
+		});
+		/*]]>*/
+	</script>
+	</th:block>
+</body>
+</html>
+
+

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"  layout:decorator="layout/default">
+<head>
+    <title>Thymeleaf 예제</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+<h1>Page Content</h1>
+<h1 th:text="${DATA}"></h1>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,120 @@
+.con_search_form{
+	padding:1rem 0;
+	border: 1px solid #dee2e6;
+	border-radius:4px;
+}
+
+.con_search_table{
+	width:100%;
+	border: none;
+}
+
+/*
+
+.form-control{
+	height:30px;
+	display: inline-block;
+	font-size:14px;
+}
+ */ 
+
+.form-control:disabled, .form-control[readonly] {
+  background-color: #eaecf4;
+  opacity: 1;
+}
+
+.tbl_search th{
+	text-align:right;
+	background:transparent;
+	padding-right:20px;
+}
+
+.tbl-col-01{width:10%}
+.tbl-col-02{width:20%}
+.tbl-col-03{width:30%}
+.tbl-col-04{width:40%}
+.tbl-col-05{width:50%}
+.tbl-col-06{width:60%}
+.tbl-col-07{width:70%}
+.tbl-col-08{width:80%}
+.tbl-col-09{width:90%}
+.tbl-col-10{width:100%}
+
+.card-header .con_search_table .btn{
+	min-width:100px;
+}
+
+/* datepicker */
+
+.datepicker{
+	width:100px !important;
+	text-align:center;
+	display:inline-block;
+	cursor:pointer;
+}
+
+
+img.ui-datepicker-trigger{
+	width:24px;
+	height:24px;
+	margin-top: -5px;
+}
+
+.ui-datepicker-div{
+	background: #fff;
+    border: 1px solid #b5b5b5;
+    border-radius: 0.35rem;
+}
+
+.table-striped{
+	border-left:0;
+	border-right:0;
+}
+
+.table.table-striped thead th{
+	background:#fff;
+	font-size:0.8rem;
+	line-height:1rem;
+	text-align:center;
+	padding: 0;
+	height: 40px;
+}
+.table.table-striped tbody td{
+	font-size:0.8rem;
+	line-height:1rem;
+	text-align:center;
+	vertical-align:middle;
+}
+
+
+.table.table-detail{
+	border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;	
+}
+
+.table.table-detail thead th{
+	border-bottom:1px solid #dee2e6;
+	border-top:0;
+}
+
+.table.table-detail thead th, .table.table-detail tbody th, .table.table-detail tbody td{
+	font-size: 0.8rem;
+    line-height: 1rem;
+    text-align:center;
+}
+.table.table-detail .text-detail{
+	margin-left:20px;
+	font-weight:300;
+}
+
+.table.table-striped.dataUser td{
+	padding-right:30px;
+}
+
+.table #listEmpty{
+	text-align: center;
+    padding: 15px;
+    font-weight: bold;
+	background: #fff;
+	border-top: 0px;
+}

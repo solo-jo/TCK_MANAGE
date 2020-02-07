@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="${#tck.getVersion('/css/detail.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+				<div class="card-header">참여사 수정</div>
+				<div class="card-body">
+					<form id="frm" name="frm">
+						<input type="hidden" id="id" name="id" th:value="${cmpy.id}"/>
+						<table class="table table-bordered table-user">
+							<colgroup>
+								<col style="width:150px;"/>
+								<col style="width:*;"/>
+							</colgroup>
+							<tr>
+								<th>참여사 ID</th>
+								<td th:text="${cmpy.id}"></td>
+							</tr>
+							<tr>
+								<th>참여사 명</th>
+								<td>
+									<input type="text" class="form-control" id="name" name="name"  data-required="참여사 명" maxlength="50" th:value="${cmpy.name}"/>
+								</td>
+							</tr>
+							<tr>
+								<th>참여사 URL</th>
+								<td>
+									<input type="text" class="form-control" id="url" name=url data-required="참여사 URL" maxlength="200"  th:value="${cmpy.url}"/>
+								</td>
+							</tr>
+							<tr>
+								<th>참여사 키</th>
+								<td th:text="${cmpy.secret_key}"></td>
+							</tr>
+							<tr>
+								<th>상태</th>
+								<td>
+									<input type="radio" id="state_1" name="state" value="1"> <label for="state_1">사용</label>
+									<input class="ml-4" type="radio" id="state_0" name="state" value="0"> <label for="state_0">미사용</label>
+								</td>
+							</tr>
+							<tr>
+								<th>생성일</th>
+								<td th:text="${cmpy.reg_dt}"></td>
+							</tr>
+							<tr th:if="${cmpy.upt_dt != null}">
+								<th>수정일</th>
+								<td th:text="${cmpy.upt_dt}"></td>
+							</tr>
+							<!--  
+							<tr>
+								<td colspan="2">
+									<button type="button" class="btn btn-info btn-sm" onclick="CompanyDetail.updateSumit();">수정</button>
+									<button type="button" class="btn btn-default btn-sm" onclick="history.back();">취소</button>
+									<div style="float:right">
+										<button type="button" class="btn btn-danger btn-sm" onclick="CompanyDetail.deleteSumit();">삭제</button>									
+									</div>
+								</td>
+							</tr>
+							-->
+						</table>
+						<div class="text-center mt-3">
+							<button type="button" class="btn btn-primary mr-1" onclick="CompanyDetail.updateSumit();">수정</button>
+							<button type="button" class="btn btn-default mr-1" onclick="history.back();">취소</button>
+							<button type="button" class="btn btn-danger" onclick="CompanyDetail.deleteSumit();">삭제</button>									
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	
+	<th:block layout:fragment="script">
+		<script th:src="${#tck.getVersion('/js/view/company_detail.js')}"></script>
+		<script>
+		/*<![CDATA[*/
+			$(document).ready(function() {
+				TckJS.Util.AlertMode = "layer";
+				var state =  "[[ ${cmpy.state} ]]";
+				$("input[name=state][value="+state+"]").prop("checked",true);
+			});			
+		/*]]>*/
+	</script>
+	</th:block>
+</body>
+</html>
+
+

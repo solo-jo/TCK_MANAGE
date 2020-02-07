@@ -1,0 +1,46 @@
+#divAtclMemo {
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	z-index: 1050;
+	width: 750px;
+	height:307px;
+	margin-left: -320px;
+	background-color: #ffffff;
+}
+
+#divAtclMemo>.modal-body {
+	position: relative;
+	overflow-y: auto;
+	max-height: 500px;
+	padding: 15px;
+}
+
+#divAtclMemo .form-control  {
+	width:100%;
+}
+
+#divAtclMemo .btn-default{
+	background-color:#fff;
+	border : 1px solid #ced4da;
+}
+
+
+#divAtclMemo .btn-default:hover{
+	background-color:#dddddd;
+	border : 1px solid #fff;
+}
+
+
+.table-left td{
+	text-align:left !important;
+}
+
+
+#divAtclMemo #update{
+	display:none;
+}
+
+.center {
+	text-align:center;
+}

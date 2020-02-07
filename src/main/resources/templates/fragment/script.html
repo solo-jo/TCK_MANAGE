@@ -1,0 +1,66 @@
+	<!-- <script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script> -->
+	<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	
+	<script th:src="@{/js/jquery-ui.js}"></script>
+	<script th:src="@{/js/tck/Stringprototype.js}"></script>
+	<script th:src="${#tck.getVersion('/js/tck/tck.js')}"></script>
+	
+	
+	<!-- Core plugin JavaScript-->
+	<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+	
+	<!-- Custom scripts for all pages-->
+	<script th:src="@{/js/sb-admin.min.js}"></script>
+	
+	<script th:src="@{/js/menu.js}"></script>
+	<script th:src="@{/js/jquery.cookie.js}"></script>
+
+	<!--
+	<script th:src="@{/vendor/chart.js/Chart.min.js}"></script> 
+	<script th:src="@{/js/demo/chart-area-demo.js}"></script>
+ -->
+
+<!-- top 타이머 기능 추가 -->
+ <script>
+  var login_timer = 1800000;
+  var logout_timer = 10000; //화면이 나오고 10초 후에 로그아웃 처리
+  var timerId = 0;
+  $(document).ready(function() {
+	  TckJS.Util.AlertMode = "layer";
+	  timerId = setInterval("loginTimer()", 1000);
+  });
+  
+  function loginTimer(){
+	  login_timer -= 1000;
+	  var minute = Math.floor((login_timer/ 1000) / 60);
+	  var second = (login_timer  - (minute * 60 ) * 1000) / 1000;
+	  
+	  if(minute < 10){
+		  minute = "0" + minute; 
+	  }
+	  if(second < 10){
+		  second = "0" + second; 
+	  }
+	  
+	  $(".navbar-nav #navbar-timer").text(minute+":"+second);
+	  if(login_timer == 0){
+		  clearInterval(timerId);
+		  timerId = setInterval("GoLogout()", 1000);
+		  TckJS.Util.Alert("30분간 동작이 없어<br/>자동로그아웃 처리 되었습니다.<br/><span style='font-size: 11px;color: blue;'><span id='logout_timer'>10</span>초 후 로그인화면으로 이동합니다.</span> ",function (){ 
+			  TckJS.Ajax.LogOut();
+		  });
+	  }
+  }
+  
+ function GoLogout(){
+	 logout_timer -= 1000;
+	 if(logout_timer <= 0) {
+		 TckJS.Ajax.LogOut();
+		 clearInterval(timerId);
+	 }else {
+		 $("#logout_timer").text(logout_timer / 1000);
+	 }
+ }
+
+  </script>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="ko">
+<head>
+	<title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">TCK MANAGER</title>
+	<!-- 공통 css, js, meta tag -->
+	<th:block th:replace="fragment/header"></th:block>
+	
+	<!-- 컨텐츠페이지의 CSS 영역이 들어감 -->
+	<th:block layout:fragment="css"></th:block>
+</head>
+
+<body id="page-top">
+
+	<ul th:replace="fragment/top"></ul>
+
+	<div id="wrapper">
+
+		<!-- Side Bar -->
+		<th:block th:replace="fragment/left"></th:block>
+
+		<!-- Content -->
+		<div id="content-wrapper">
+			<th:block layout:fragment="content"></th:block>
+			<footer th:replace="fragment/footer :: commonFooter"></footer>
+		</div>
+	</div>
+	
+	<!-- 컨텐츠페이지의 MODEL창 영역이 들어감 -->
+	<th:block layout:fragment="modal"></th:block>
+
+	<th:block th:replace="fragment/script"></th:block>
+
+	<!-- 컨텐츠페이지의 SCRIPT 영역이 들어감 -->
+	<th:block layout:fragment="script"></th:block>
+</body>
+</html>
+

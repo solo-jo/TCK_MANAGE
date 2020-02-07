@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="@{/vendor/datatables/dataTables.bootstrap4.css}" rel="stylesheet">
+		<link th:href="${#tck.getVersion('/css/list.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+	
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+				<!-- 검색 조건 -->
+				<div class="card-header">
+				<form name="Searchfrm" id="Searchfrm" method="GET">
+					<input type="hidden" id="searchAddr" name="searchAddr"/>
+					<input type="hidden" id="searchAddrLevel" name="searchAddrLevel"/>
+					<div class="con_search_form">
+						<table summary="매물신고 검색" class="con_search_table tbl_search">
+							<colgroup>
+								<col class="tbl-col-01" />
+								<col class="tbl-col-03" />
+								<col class="tbl-col-01" />
+								<col class="tbl-col-01" />
+								<col class="tbl-col-01" />
+								<col class="tbl-col-03" />
+							</colgroup>
+							<tr>
+								<th>조회일자</th>
+								<td>
+									<select name="searchDateType" id="searchDateType" class="select_box">
+										<option value="dcl">신고일</option>
+										<option value="trt">처리일</option>
+									</select>
+									<input type="text" id="searchDateFrom" name="searchDateFrom" class="form-control datepicker" readonly/> -
+									<input type="text" id="searchDateTo" name="searchDateTo" class="form-control datepicker"  readonly />
+								</td>
+								<th>참여사</th>
+								<td>
+									<select name="spId" id="spId" class="select_box" style="width: 145px;">
+										<option value="">전체</option>
+									</select>
+								</td>
+								<th>주소</th>
+								<td>
+									<select name="addrCode1" id="addrCode1" class="select_box" style="width: 145px;">
+										<option value="">선택</option>
+									</select>
+									<select name="addrCode2" id="addrCode2" class="select_box" style="width: 145px;">
+										<option value="">선택</option>
+									</select>
+									<select name="addrCode3" id="addrCode3" class="select_box" style="width: 145px;">
+										<option value="">선택</option>
+									</select>
+								</td>
+								<!--
+ 								<td>
+									<button type="button" onclick="ExcelDown();">엑셀다운로드</button>
+								</td>
+								 -->
+							</tr>
+							<tr>
+								<th>조건검색</th>
+								<td>
+									<select name="searchConType" id="searchConType" class="select_box">
+										<option value="">조건선택</option>
+										<option value="rtlt">중개업소</option>
+										<option value="bizNo">사업자번호</option>
+										<option value="spAtclNo">참여사 매물번호</option>
+										<option value="cpId">매물등록처</option>
+										<option value="cpAtclNo">매물등록처 매물번호</option>
+										<option value="addr">주소</option>
+									</select>
+									<input type="text" class="form-control" id="searchKeyword" name="searchKeyword" style="width: 205px;"  />							
+								</td>
+								<th>처리단계</th>
+								<td>
+									<select name="searchLevel" id="searchLevel" class="select_box" style="width: 145px;">
+										<option value="">전체</option>
+										<option value="DCL">신고단계</option>
+										<option value="RLTR">중개사처리</option>
+										<option value="CALL">유선검증</option>
+										<option value="FILD">현장검증</option>
+									</select>
+								</td>
+								<th>처리결과</th>
+								<td>
+									<select name="searchResult" id="searchResult" class="select_box">
+										<option value="">전체</option>
+										<option value="IMPS">신고반려</option>
+										<option value="FALSE">허위매물</option>
+										<option value="DONE">정보업체로 전달된 상태</option>
+										<option value="CMPL">거래완료</option>
+										<option value="IMPL">처리불가</option>
+										<option value="DENY">검증거부</option>
+										<option value="WAIT">최초 신고</option>
+										<option value="NOMAL">정상매물</option>
+										<option value="ABEND">부재종료</option>
+										<option value="EXPR">기간만료</option>
+									</select>
+								</td>
+								<!-- 
+								<td>
+									<button type="submit">조회</button>
+								</td>
+								 -->
+							</tr>
+						</table>
+						<div class="text-center mt-3">
+							<button type="submit" class="btn btn-primary mr-1"><i class="fas fa-search"></i>&nbsp;조회</button>
+							<button type="button" class="btn btn-info" onclick="ExcelDown();"><i class="fas fa-file-excel"></i>&nbsp;엑셀다운로드</button>
+						</div>
+					</div>
+				</form>
+				</div>
+				
+				<!-- 검색 결과 -->
+				<div class="card-body">
+					<table class="table table-striped dataTable" id="dataTable" width="100%" cellspacing="0">
+					    <colgroup>
+					    	<col style="width:10%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:10%">
+					    	<col style="width:10%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:10%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    	<col style="width:5%">
+					    </colgroup>
+						<thead>
+							<tr>
+								<th>신고일시</th>
+								<th>신고번호</th>
+								<th>참여사</th>
+								<th>참여사<br>매물번호</th>
+								<th>지역</th>
+								<th>매물명</th>
+								<th>매물종류</th>
+								<th>거래종류</th>
+								<th>중개업소명</th>
+								<th>사업자번호</th>
+								<th>연락처</th>
+								<th>처리단계</th>
+								<th>처리일시</th>
+								<th>처리결과</th>
+								<th>패널티</th>
+								<th>매물등록처</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block layout:fragment="script">
+		<!-- Page level plugin JavaScript-->
+		<script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+		<script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+		<script th:src="@{/js/tck/data_table_util.js}"></script>
+		<script th:src="@{/js/tck/addr_code.js}"></script>
+		<script th:src="@{/js/tck/company_code.js}"></script>
+		<script th:src="@{/js/tck/excel_util.js}"></script>
+		<script>
+		/*<![CDATA[*/
+		
+		var setData = []
+		setData.push({ formID : "Searchfrm" ,targatID : "searchDateType", val : "[[ ${param.searchDateType} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchDateFrom", val : "[[ ${param.searchDateFrom} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchDateTo", val : "[[ ${param.searchDateTo} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "spId", val : "[[ ${param.spId} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchConType", val : "[[ ${param.searchConType} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchKeyword", val : "[[ ${param.searchKeyword} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchLevel", val : "[[ ${param.searchLevel} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchResult", val : "[[ ${param.searchResult} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchAddr", val : "[[ ${param.searchAddr} ]]" });
+		setData.push({ formID : "Searchfrm" ,targatID : "searchAddrLevel", val : "[[ ${param.searchAddrLevel} ]]" });
+		
+		
+		$(document).ready(function() {
+			Menu.Action("#menu_atcl_rltr");
+			TckJS.Util.AlertMode = "layer";
+			TckJS.PageUtil.init(setData,null);
+			
+			 var dataTable_serach = function ( d ) {
+			      return $.extend( {}, d,  {
+						 "searchDateType": $('#searchDateType').val(),
+						 "searchDateFrom": $('#searchDateFrom').val(),
+						 "searchDateTo": $('#searchDateTo').val(),
+						 "spId": "[[ ${param.spId} ]]",
+						 "searchConType": $('#searchConType').val(),
+						 "searchKeyword": $('#searchKeyword').val(),
+						 "searchLevel": $('#searchLevel').val(),
+						 "searchResult": $('#searchResult').val(),
+						 "searchAddr": $('#searchAddr').val(),
+						 "searchAddrLevel": $('#searchAddrLevel').val()
+					 });
+			    };
+			     
+			    
+				 var dataTable_columns = [
+					 	{ data: "dcl_ymdt" },
+					 	{ data: "dcl_seq" },
+					 	{ data: "sp_id" },
+		                { data: "sp_atcl_no" , "render": function ( data, type, row, meta ) {
+		                    return '<a href="/atcl/detail?dclSeq='+row.dcl_seq+'">'+data+'</a>';
+		                	} 
+		                },
+		                { data: "cortar_no" },
+		                { data: "atcl_nm" },
+		                { data: "rlet_tp_nm" },
+		                { data: "trad_tp_nm" },
+		                { data: "rltr_nm" },
+		                { data: "biz_no" },
+		                { data: "rltr_tel_no" },
+		                { data: "lst_trt_stat_cd" },
+		                { data: "lst_trt_ymdt" },
+		                { data: "lst_trt_rslt_cd" },
+		                { data: "plt_type_cd" },
+		                { data: "cp_id" }
+		         ];
+				 
+				var dataTable_order = [0, 'desc']; 
+				DataTableUtil.init($('#dataTable'),"/atcl/ajax/list" ,dataTable_serach ,  dataTable_columns,dataTable_order);
+				DataTableUtil.EnterSubmit($("#Searchfrm #searchKeyword"));
+				
+				/* 법정코드 관련 */
+				var addrCode1Val = "[[ ${param.addrCode1} ]]";
+				var addrCode2Val = "[[ ${param.addrCode2} ]]";
+				var addrCode3Val = "[[ ${param.addrCode3} ]]";
+				AddrCodrUtil.init($("#addrCode1"), $("#addrCode2"), $("#addrCode3"), $("#searchAddr"), $("#searchAddrLevel"));
+				AddrCodrUtil.getAddrCode(1,"",$("#addrCode1"),null,addrCode1Val);
+				if(addrCode1Val != "") {
+					AddrCodrUtil.getAddrCode(2,addrCode1Val,$("#addrCode2"),[$("#addrCode2"),$("#addrCode3")]);
+				}
+				
+				if(addrCode2Val != "") {
+					AddrCodrUtil.getAddrCode(2,addrCode1Val,$("#addrCode2"),[$("#addrCode2"),$("#addrCode3")],addrCode2Val);
+					AddrCodrUtil.getAddrCode(3,addrCode2Val,$("#addrCode3"),[$("#addrCode3")]);
+				}
+				if(addrCode3Val != "") AddrCodrUtil.getAddrCode(3,addrCode2Val,$("#addrCode3"),null,addrCode3Val);
+				$("#addrCode1").change(function () {
+					AddrCodrUtil.getAddrCode(2,this.value,$("#addrCode2"),[$("#addrCode2"),$("#addrCode3")]);
+				})
+				
+				$("#addrCode2").change(function () {
+					AddrCodrUtil.getAddrCode(3,this.value,$("#addrCode3"),[$("#addrCode3")]);
+				})
+				/* 법정코드 관련 끝*/
+				
+				/* 참여사 코드 관련 */
+				CompanyCodrUtil.getCompanyCode($("#spId"),"[[ ${param.spId} ]]");
+				/* 참여사 코드 관련 끝 */
+			
+		});
+		
+		function ExcelDown(){
+			ExcelUtil.Down($("#Searchfrm"),"/atcl/excel_down" ,$(".sidebar .active").text().trim(), $(".sidebar .active").text().trim());
+		}
+		/*]]>*/
+	</script>
+	</th:block>
+</body>
+</html>
+
+

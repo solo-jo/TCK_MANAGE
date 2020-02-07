@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="${#tck.getVersion('/css/detail.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+				<div class="card-header">회원 추가</div>
+				<div class="card-body">
+					<form id="frm" name="frm">
+						<input type="hidden" id="overlap" name="overlap" value="0"/>
+						<table class="table table-bordered table-user">
+							<colgroup>
+								<col style="width:150px;"/>
+								<col style="width:*;"/>
+							</colgroup>
+							<tr>
+								<th>이름</th>
+								<td>
+									<input type="text" class="form-control" id="name" name="name" data-required="이름" maxlength="9"/>
+								</td>
+							</tr>
+							<tr>
+								<th>아이디</th>
+								<td>
+									<input type="text" class="form-control" id="id" name="id" data-required="아이디"  maxlength="30"/>
+								</td>
+							</tr>
+							<tr>
+								<th>패스워드</th>
+								<td>
+									<input type="password" class="form-control" id="pw" name="pw"  data-required="패스워드" maxlength="100"/> 
+								</td>
+							</tr>
+							<tr>
+								<th>권한</th>
+								<td>
+									<th:block th:each="menu : ${menus}">
+										<input type="checkbox" class="form-control menu_code" th:id="${menu.menu_code}" name="menu_codes"  th:value="${menu.menu_code}"/>
+										<label th:for="${menu.menu_code}" th:text="${menu.menu_title}"></label><br/>
+						  			</th:block>
+								</td>
+							</tr>
+							<!--  
+							<tr>
+								<td colspan="2">
+									<button type="button" class="btn btn-info btn-sm" onclick="UserDetail.insertSumit();">저장</button>
+									<button type="button" class="btn btn-default btn-sm" onclick="history.back();">취소</button>
+								</td>
+							</tr>
+							-->
+						</table>
+						<div class="text-center mt-3">
+							<button type="button" class="btn btn-primary mr-1" onclick="UserDetail.insertSumit();">저장</button>
+							<button type="button" class="btn btn-default" onclick="history.back();">취소</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	
+	<th:block layout:fragment="script">
+		<script th:src="${#tck.getVersion('/js/view/user_detail.js')}"></script>
+		<script>
+		/*<![CDATA[*/
+			$(document).ready(function() {
+				TckJS.Util.AlertMode = "layer";
+				$("#frm").find("#id").blur(function(){ UserDetail.overlap(); })
+				$("#frm").find("#id").change(function(){ $("#frm").find("#overlap").val("0"); })
+			});			
+		/*]]>*/
+	</script>
+	</th:block>
+</body>
+</html>
+
+

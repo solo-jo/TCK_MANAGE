@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="divAtclMemo" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true" th:fragment="atclMemo">
+	<div class="modal-header">
+		<h3>
+			상담저장
+		</h3>
+		<a class="close" data-dismiss="modal" aria-hidden="true">×</a>
+	</div>
+	<div class="modal-body">
+		<form id="frm_memo" name="frm_memo" method="post">
+		<input type="hidden" id="dcl_seq" name="dcl_seq" th:value="${article.dcl_seq}" />
+		<input type="hidden" id="dcl_com_seq" name="dcl_com_seq"/>
+		
+			<table class="table table-detail" style="margin-bottom: 0px;">
+				<colgroup>
+					<col width="140" />
+					<col />
+				</colgroup>
+				<tbody>
+                	<tr>
+	                    <th>
+	                    	상담내용 
+	                    </th>
+	                    <td>
+	                         <textarea class="form-control" id="dcl_cmnt" name="dcl_cmnt" style="height: 135px;"></textarea>
+	                    </td>
+                	</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button id="insert" type="button" class="btn btn-success" onclick="AtclMemo.Insert()">저장</button>
+		<button id="update" type="button" class="btn btn-success" onclick="AtclMemo.Update()">수정</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">닫기</button>
+	</div>
+</div>
+</html>
+
+

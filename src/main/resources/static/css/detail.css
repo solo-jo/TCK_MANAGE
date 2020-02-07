@@ -1,0 +1,81 @@
+.detailBtn {
+    background-color: #fff;
+    font-size: 12px;
+    padding: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.datepicker{
+	max-width:110px;
+	text-align:center;
+	display:inline-block;
+	cursor:pointer;
+}
+
+img.ui-datepicker-trigger{
+	width:24px;
+	margin-top: -5px;
+}
+
+
+label {
+	margin-left:5px;
+} 
+
+.table th {
+	text-align:center;
+}
+
+.table .left {
+	text-align:left !important;
+	padding-left:24px;
+}
+.table .left i{
+	margin-right:2px;
+}
+
+.table #listEmpty{
+    text-align: center;
+    padding: 15px;
+    font-weight: bold;
+}
+
+
+.table td{
+	vertical-align: middle;
+}
+
+.btn-default{
+	background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+
+.menu_code{
+    width: 15px;
+    height: 15px;
+    display: inline;
+    vertical-align: baseline;
+}
+
+.table-user td{
+	vertical-align:middle;
+}
+
+.table-user input[type=text], .table-user input[type=password]{
+	width:300px;
+	display: inline-block;
+}
+
+
+.plt_select{
+	width: 70px;
+	display: inline;
+}
+
+.dup_cnt{
+    display: inline-block;
+    float: right;
+    color: red;
+    font-weight: bold;
+}

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout/default">
+<body>
+	<th:block layout:fragment="css">
+		<link th:href="${#tck.getVersion('/css/detail.css')}" rel='stylesheet' type='text/css' />
+		<link th:href="${#tck.getVersion('/css/view/atcl_memo_detail.css')}" rel='stylesheet' type='text/css' />
+	</th:block>
+
+	<th:block layout:fragment="content">
+		<div class="container-fluid">
+			<!-- 화면구성 -->
+			<div class="card mb-3">
+				<input type="hidden" id="sp_atcl_no" name="sp_atcl_no" th:value="${article.sp_atcl_no}">
+				<input type="hidden" id="trad_tp_nm" name="trad_tp_nm" th:value="${article.trad_tp_nm}">
+				<input type="hidden" id="rlet_tp_nm" name="rlet_tp_nm" th:value="${article.rlet_tp_nm}">
+				<input type="hidden" id="cortar_no" name="cortar_no" th:value="${article.cortar_no}">
+				<input type="hidden" id="addr" name="addr" th:value="${article.addr}">
+				
+				<div class="card-header">
+					매물 상세 정보 [ 신고번호 : <strong class="text-danger" th:text="${article.dcl_seq}"></strong> ] 
+					<button type="button" class="btn btn-primary" onclick="window.open($(this).attr('data_url'));" th:data_url="${article.atcl_dtl_url}"><i class="far fa-file-alt"></i>&nbsp;매물상세보기</button>
+					<div class="dup_cnt" th:if="${article.dup_cnt > 1}">
+						본 매물은 <span th:text="${article.dup_cnt}"></span>건 이상의 신고가 확인되는 매물입니다.
+					</div>
+				</div>
+				<div class="card-body">
+					<!-- 매물 상세 정보 -->
+					<table class="table table-bordered">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:*;"/>
+							<col style="width:150px;"/>
+							<col style="width:*;"/>
+						</colgroup>
+						<tr>
+							<th>매물번호</th>
+							<td th:text="${article.sp_atcl_no}"></td>
+							<th>등록기간</th>
+							<td th:text="${article.atcl_exps_ymdt}"></td>
+						</tr>
+						<tr>
+							<th>중개업소명</th>
+							<td th:text="${article.rltr_nm}"></td>
+							<th>중개업소 사업자번호</th>
+							<td th:text="${article.biz_no}"></td>
+						</tr>
+						<tr>
+							<th>중개업소 소재지</th>
+							<td colspan="3" th:text="${article.rltr_addr}"></td>
+						</tr>
+						<tr>
+							<th>중개업소 연락처</th>
+							<td colspan="3" th:text="${article.rltr_tel_no}"></td>
+						</tr>
+						<tr>
+							<th>매물등록처</th>
+							<td th:text="${article.cp_name}"></td>
+							<th>매물 거래종류</th>
+							<td th:text="${article.trad_tp_nm}"></td>
+						</tr>
+						<tr>
+							<th>지역</th>
+							<td th:text="${article.cortar_no}"></td>
+							<th>매물명</th>
+							<td th:text="${article.atcl_nm}"></td>
+						</tr>
+						<tr>
+							<th>매물가격</th>
+							<td th:text="${article.prc}"></td>
+							<th>면적</th>
+							<td th:text="${article.spc}"></td>
+						</tr>
+					</table>
+
+					<!-- 신고매물 정보 -->
+					<table class="table table-bordered">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:*;"/>
+							<col style="width:150px;"/>
+							<col style="width:*;"/>
+						</colgroup>
+						<tr>
+							<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;신고매물 정보</th>
+						</tr>
+						<tr>
+							<th>신고일시</th>
+							<td colspan="3" th:text="${article.dcl_ymdt}"></td>
+						</tr>
+						<tr>
+							<th>신고사유</th>
+							<td colspan="3" th:text="${#tck.getDclRsnCd(article.dcl_rsn_cd)}"></td>
+						</tr>
+						<tr>
+							<th>신고내용</th>
+							<td colspan="3" th:text="${article.dcl_cont}"></td>
+						</tr>
+					</table>
+					
+					<!-- 허위매물 판별 확인정보 -->
+					<table class="table table-bordered">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:*;"/>
+							<col style="width:200px;"/>
+							<col style="width:200px;"/>
+						</colgroup>
+						<tr>
+							<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;허위매물 판별 확인정보</th>
+						</tr>
+						<tr>
+							<th>판별방법</th>
+							<td colspan="3" th:text="${#tck.getEvdTpCd(article.evd_tp_cd)}"></td>
+						</tr>
+						<tr>
+							<th>판별 기타사유</th>
+							<td colspan="3" th:text="${article.evd_desc}"></td>
+						</tr>
+						<tr>
+							<th>증빙파일번호</th>
+							<th colspan="3" >증빙파일명</th>
+						</tr>
+						<th:block th:each="item : ${efils}">
+						  	<tr style="text-align: center;">
+								<td th:text="${item.evd_file_seq}"></td>
+								<td colspan="3"  th:text="${item.evd_file_path}"></td>
+							</tr>
+						</th:block>
+						<tr th:if="${efils == null || efils.size() == 0}">
+								<td id="listEmpty" colspan="4">내역이 존재하지 않습니다.</td>
+						 </tr>
+					</table>
+					
+					<!-- 중개사처리 -->
+					<table class="table table-bordered" th:if="${rlrt_hist != null}">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:*"/>
+							<col style="width:150px;"/>
+							<col style="width:*"/>
+						</colgroup>
+						<tr>
+							<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;중개사처리</th>
+						</tr>
+						<tr>
+							<th>처리일 / 처리자</th>
+							<td colspan="3" th:text="${rlrt_hist.trt_ymdt +' / '+ rlrt_hist.trtr}"></td>
+						</tr>
+						<tr>
+							<th>처리결과</th>
+							<td colspan="3" th:text="${#tck.getArticalResult(rlrt_hist.trt_rslt_cd)}"></td>
+						</tr>
+						<tr>
+							<th>관리자메모</th>
+							<td colspan="3" th:text="${rlrt_hist.mgr_cmnt}"></td>
+						</tr>
+					</table>
+					
+					<!-- 유선검증 -->
+					<table class="table table-bordered" th:if="${call_hist != null}">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:*"/>
+							<col style="width:150px;"/>
+							<col style="width:*"/>
+						</colgroup>
+						<tr>
+							<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;유선검증 <button type="button" class="btn btn-info ml-1" onclick="AtclDetail.updateTableToggle(1);">재처리</button></th>
+						</tr>
+						<tr>
+							<th>처리일 / 처리자</th>
+							<td colspan="3" th:text="${call_hist.trt_ymdt +' / '+ call_hist.trtr}"></td>
+						</tr>
+						<tr>
+							<th>처리결과</th>
+							<td colspan="3" th:text="${#tck.getArticalResult(call_hist.trt_rslt_cd)}"></td>
+						</tr>
+						<tr>
+							<th>관리자메모</th>
+							<td colspan="3" th:text="${call_hist.mgr_cmnt}"></td>
+						</tr>
+					</table>
+					
+					<!-- 최종상태 재처리(유선검증) -->
+					<form id="update_frm" name="update_frm" th:if="${article.lst_trt_stat_cd.equals('CALL')}">
+						<input type="hidden" id="dcl_seq" name="dcl_seq" th:value="${article.dcl_seq}">
+						<input type="hidden" id="trt_stat_cd" name="trt_stat_cd" value="CALL">
+						<table class="table table-bordered" th:if="${call_hist != null}" id="update_table" style="display:none;">
+							<colgroup>
+								<col style="width:150px;"/>
+								<col style="width:*"/>
+								<col style="width:150px;"/>
+								<col style="width:*"/>
+							</colgroup>
+							<tr>
+								<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;최종상태 재처리</th>
+							</tr>
+							<tr>
+								<th>결과입력</th>
+								<td colspan="3">
+									<input type="radio" id="trt_rslt_cd_u_1" name="trt_rslt_cd" value="NOMAL" th:if="${!article.lst_trt_rslt_cd.equals('NOMAL')}"> 
+									<label for="trt_rslt_cd_u_1" th:if="${!article.lst_trt_rslt_cd.equals('NOMAL')}">정상매물</label>
+									<input type="radio" id="trt_rslt_cd_u_2" name="trt_rslt_cd" value="FALSE" th:if="${!article.lst_trt_rslt_cd.equals('FALSE')}"> 
+									<label for="trt_rslt_cd_u_2" th:if="${!article.lst_trt_rslt_cd.equals('FALSE')}">허위매물</label>
+									<input type="radio" id="trt_rslt_cd_u_3" name="trt_rslt_cd" value="ABEND" th:if="${!article.lst_trt_rslt_cd.equals('ABEND')}"> 
+									<label for="trt_rslt_cd_u_3" th:if="${!article.lst_trt_rslt_cd.equals('ABEND')}">부재-종료</label>
+									<input type="radio" id="trt_rslt_cd_u_4" name="trt_rslt_cd" value="IMPL" th:if="${!article.lst_trt_rslt_cd.equals('IMPL')}"> 
+									<label for="trt_rslt_cd_u_4" th:if="${!article.lst_trt_rslt_cd.equals('IMPL')}">처리불가</label>
+								</td>
+							</tr>
+							<tr>
+								<th>페널티구분</th>
+								<td colspan="3">
+									<input class="plt_radio" type="radio" id="plt_type_cd_u_0" name="plt_type_cd" value=""> <label for="plt_type_cd_u_0">패널티 미적용</label>
+									<input class="plt_radio" type="radio" id="plt_type_cd_u_1" name="plt_type_cd" value="WARN"> <label for="plt_type_cd_u_2">경고</label>
+									<input class="plt_radio" type="radio" id="plt_type_cd_u_2" name="plt_type_cd" value="PCALL"> <label for="plt_type_cd_u_2">페널티(7일)</label>
+									<!-- 
+									<select class="form-control plt_select" id="plt_date" name="plt_date" disabled>
+										<option value="7">7일</option>
+									</select>
+									 -->
+								</td>
+							</tr>
+							<tr>
+								<th>관리자메모</th>
+								<td colspan="3">
+									<textarea class="form-control" id="mgr_cmnt" name="mgr_cmnt" style="width: 800px;height: 100px;"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<button type="button" class="btn btn-info btn-sm" onclick="AtclDetail.updateSumit();">재처리</button>
+									<button type="button" class="btn btn-danger btn-sm"  onclick="AtclDetail.updateTableToggle(0);">취소</button>
+								</td>
+							</tr>
+						</table>
+					</form>
+					
+					<!-- 유선확인결과 -->
+					<form id="result_frm" name="result_frm" th:if="${article.lst_trt_stat_cd.equals('RLTR')}">
+						<input type="hidden" id="dcl_seq" name="dcl_seq" th:value="${article.dcl_seq}">
+						<input type="hidden" id="trt_stat_cd" name="trt_stat_cd" value="CALL">
+						<table class="table table-bordered"  id="result_table">
+							<colgroup>
+								<col style="width:150px;"/>
+								<col style="width:150px;"/>
+								<col style="width:150px;"/>
+								<col style="width:*"/>
+							</colgroup>
+							<tr>
+								<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;유선검증결과</th>
+							</tr>
+							<tr>
+								<th rowspan="3">
+									관리자<br/>
+									유선검증 결과입력
+								</th>
+								<td colspan="3">
+									<input type="radio" id="trt_rslt_cd_1" name="trt_rslt_cd" value="NOMAL"> <label for="trt_rslt_cd_1">정상매물</label>
+									<input type="radio" id="trt_rslt_cd_2" name="trt_rslt_cd" value="FALSE"> <label for="trt_rslt_cd_2">허위매물</label>
+									<input type="radio" id="trt_rslt_cd_3" name="trt_rslt_cd" value="ABEND"> <label for="trt_rslt_cd_3">부재-종료</label>
+									<input type="radio" id="trt_rslt_cd_4" name="trt_rslt_cd" value="IMPL"> <label for="trt_rslt_cd_4">처리불가</label>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									페널티구분
+								</th>
+								<td colspan="2">
+									<input class="plt_radio" type="radio" id="plt_type_cd_0" name="plt_type_cd" value=""> <label for="plt_type_cd_0">패널티 미적용</label>
+									<input class="plt_radio" type="radio" id="plt_type_cd_1" name="plt_type_cd" value="WARN"> <label for="plt_type_cd_1">경고</label>
+									<input class="plt_radio" type="radio" id="plt_type_cd_2" name="plt_type_cd" value="PCALL"> <label for="plt_type_cd_2">페널티(7일)</label>
+									<!-- 
+									<select class="form-control plt_select" id="ptest_date" name="ptest_date" disabled>
+										<option value="7">7일</option>
+									</select>
+									 -->
+								</td>
+							</tr>
+							<tr>
+								<th>
+									상세결과<br/>
+									(중개업소 전달메세지)
+								</th>
+								<td colspan="2">
+									<textarea class="form-control" id="rltr_snd_msg" name="rltr_snd_msg" style="width: 800px;height: 100px;"></textarea >
+								</td>
+							</tr>
+							<tr>
+								<th>관리자메모</th>
+								<td colspan="3">
+									<textarea class="form-control" id="mgr_cmnt" name="mgr_cmnt" style="width: 800px;height: 100px;"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<button type="button" class="btn btn-primary btn-sm" onclick="AtclDetail.ResultSumit();">등록</button>
+									<button type="button" class="btn btn-default btn-sm" onclick="history.back();">목록</button>
+								</td>
+							</tr>
+						</table>
+					</form>
+					
+					<!-- 삼담이력 -->
+					<table class="table table-bordered">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:100px"/>
+							<col style="width:*"/>
+							<col style="width:100px"/>
+						</colgroup>
+						<tr>
+							<th  class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;상담이력</th>
+						</tr>
+						<tr>
+							<th>입력일시</th>
+							<th>입력자</th>
+							<th>상담내용</th>
+							<th></th>
+						</tr>
+						<th:block th:each="item : ${comment}">
+							  <tr th:id="${'memo_'+item.dcl_com_seq}">
+							  	<td class="center" th:text="${item.reg_ymdt}"></td>
+							  	<td class="center" th:text="${item.regr}"></td>
+							  	<td class="center" id="dcl_cmnt" th:text="${item.dcl_cmnt}"></td>
+							  	<td class="center">
+							  		<button type="button" class="btn btn-success btn-sm" th:onclick="|AtclMemo.ModeilOpen_Update(${item.dcl_com_seq});|">수정</button>
+							  		<button type="button" class="btn btn-danger btn-sm" th:onclick="|AtclMemo.Delete(${item.dcl_com_seq});|">삭제</button>
+							  	</td>
+							  </tr>
+						</th:block>
+						<tr th:if="${comment == null || comment.size() == 0}">
+							<td id="listEmpty" colspan="4">내역이 존재하지 않습니다.</td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<button type="button" class="btn btn-info btn-sm" onclick="AtclMemo.ModeilOpen();">상담</button>
+							</td>
+						</tr>
+					</table>
+					
+					<!-- 매물 페널티 내역 -->
+					<table class="table table-bordered">
+						<colgroup>
+							<col style="width:150px;"/>
+							<col style="width:*"/>
+							<col style="width:150px;"/>
+							<col style="width:*"/>
+						</colgroup>
+						<tr>
+							<th class="left" colspan="4"><i class="fas fa-asterisk"></i>&nbsp;매물 페널티 내역</th>
+						</tr>
+						  <th:block th:each="item : ${penalty}">
+						  	<!-- 취소된 페널티 -->
+						  	<tr th:if="${item.cncl_yn.equals('Y')}">
+								<th>제재현황</th>
+								<td>
+									<span th:text="${#tck.getPltTpye(item.plt_type_cd)}"></span><br/>
+									취소사유 : <span th:text="${item.cncl_rsn}"></span>  
+								</td>
+								<th>취소일시/처리자</th>
+								<td th:text="${item.cncl_ymdt +' / '+ item.cnclr}"></td>
+							</tr>
+							<!-- 페널티 -->
+							<tr th:if="${item.cncl_yn.equals('N')}">
+								<th>제재현황</th>
+								<td>
+									<span th:text="${#tck.getPltTpye(item.plt_type_cd)}"></span><br/>
+									<span th:text="${item.strt_ymdt}"></span> ~ <span th:text="${item.end_ymdt}"></span>  
+								</td>
+								<th>등록일시/처리자</th>
+								<td th:text="${item.plt_ymdt +' / '+ item.regr}"></td>
+							</tr>
+						  </th:block>
+						  <tr th:if="${penalty == null || penalty.size() == 0}">
+								<td id="listEmpty" colspan="4">내역이 존재하지 않습니다.</td>
+						  </tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</th:block>
+	
+	<div layout:fragment="modal">
+		<div th:replace="fragment/article/divMemo :: atclMemo"></div>
+	</div>
+	
+	
+	<th:block layout:fragment="script">
+		<script th:src="${#tck.getVersion('/js/view/atcl_call_dtail.js')}"></script>
+		<script th:src="${#tck.getVersion('/js/view/atcl_memo.js')}"></script>
+		<script>
+		/*<![CDATA[*/
+			$(document).ready(function() {
+				AtclDetail.init();
+				Menu.Action("#menu_atcl_call");
+				TckJS.PageUtil.DatePicker();
+			});
+
+		/*]]>*/
+	</script>
+	</th:block>
+</body>
+</html>
+
+
